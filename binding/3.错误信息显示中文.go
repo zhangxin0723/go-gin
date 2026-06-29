@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"reflect"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -25,6 +26,14 @@ func init() {
 	if ok {
 		_ = zh_translations.RegisterDefaultTranslations(v, trans)
 	}
+
+	v.RegisterTagNameFunc(func(field reflect.StructField) string {
+		label := field.Tag.Get("label")
+		if label == "" {
+			return field.Name
+		}
+		return label
+	})
 }
 
 func ValidateErr(err error) string {
@@ -40,7 +49,7 @@ func ValidateErr(err error) string {
 }
 
 type User struct {
-	Name  string `json:"name" binding:"required"`
+	Name  string `json:"name" binding:"required" label:"名称"`
 	Email string `json:"email" binding:"required,email"`
 }
 

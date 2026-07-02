@@ -11,7 +11,7 @@ type UserModel struct {
 	Id              int              `gorm:"primaryKey"`
 	Name            string           `gorm:"size:16;not null;unique"`
 	Age             int              `gorm:"default:18"`
-	UserDetailModel *UserDetailModel `gorm:"foreignKey:UserId"`
+	UserDetailModel *UserDetailModel `gorm:"foreignKey:UserId;constraint:OnDelete:CASCADE"`
 	CreatedAt       time.Time
 }
 
@@ -19,7 +19,7 @@ type UserDetailModel struct {
 	Id        int        `gorm:"primaryKey"`
 	UserId    int        `gorm:"not null;unique"` // 一对一情况下，需要加上唯一约束
 	Email     string     `gorm:"size:32"`
-	UserModel *UserModel `gorm:"foreignKey:UserId"`
+	UserModel *UserModel `gorm:"foreignKey:UserId;constraint:OnDelete:CASCADE"`
 }
 
 func (u *UserModel) BeforeCreate(tx *gorm.DB) error {
